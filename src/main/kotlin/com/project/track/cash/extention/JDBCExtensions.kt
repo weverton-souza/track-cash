@@ -1,6 +1,5 @@
 package com.project.track.cash.extention
 
-import com.project.track.cash.annotation.Loggable
 import com.project.track.cash.domain.AbstractEntity
 import com.project.track.cash.extention.OptionalExtensions.orThrowNotFound
 import java.util.Optional
@@ -27,9 +26,7 @@ inline fun <reified T : AbstractEntity> JpaRepository<T, UUID>.deleteByIdOrThrow
 inline fun <reified T : AbstractEntity> JpaRepository<T, UUID>.findByUUIDOrThrow(id: UUID): T = findByIdOrThrow(id)
 
 object OptionalExtensions {
-    @Loggable
     fun <T> Optional<T>.orThrowNotFound(message: String = "HTTP_4XX_404_NOT_FOUND"): T = orElseThrow { RuntimeException(message) }
 
-    @Loggable
     fun <T> Optional<T>.orNull(): T? = orElse(null)
 }

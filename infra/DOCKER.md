@@ -15,15 +15,6 @@ docker-compose down
 docker-compose down -v
 ```
 
-## Build da Imagem
-```bash
-# Buildar
-docker build -t trackcashinfra/project-track-cash-backend:dev .
-
-# Push (opcional)
-docker push trackcashinfra/project-track-cash-backend:dev
-```
-
 ## Acessar
 
 - API: http://localhost:8080
