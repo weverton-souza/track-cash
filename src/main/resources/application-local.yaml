@@ -1,0 +1,37 @@
+spring:
+  sql:
+    init:
+      mode: always
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_URL:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DATABASE:track-cash-database}
+    username: ${POSTGRES_USERNAME:trackcash}
+    password: ${POSTGRES_PASSWORD:hoezdj9v8zF6uaB6I88E}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        multiTenancy: SCHEMA
+        tenant_identifier_resolver: com.project.track.cash.configuration.ContextTenantIdentifierResolver
+        multi_tenant_connection_provider: com.project.track.cash.configuration.SchemaConnectionProvider
+        generate_statistics: false
+    generate-ddl: false
+    show-sql: true
+    open-in-view: true
+  flyway:
+    baseline-on-migrate: true
+    locations: db/migration,db/migration/multi-tenant
+
+application:
+  track-cash:
+    active-profile:
+      is-production: false
+    security:
+      iteration-count: 33
+      token-expiration: 259200000
+      refresh-token-expiration: 604800000
+      jwt-signing-key: 5Kg6WrL1NsY2ToH4QjXzBa9Dc3Fv7Mu8IpORmSeVtZnCp0yJlUiTIKZ4Q6X1Bbf0
+      url-signing-key: Oe8Xx9KUDnAkHQHvrrBPlxBHH9vbiZvnb9s8cW86y40MgTkJTfbFYjx3wyW95TER

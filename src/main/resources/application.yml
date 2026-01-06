@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: track-cash-backend
+  jackson:
+    default-property-inclusion: NON_NULL
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+    enabled: true
+    doc-expansion: none
+  writer-with-order-by-keys: true

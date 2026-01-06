@@ -1,0 +1,46 @@
+services:
+  track-cash-database:
+    image: postgres:16-alpine
+    container_name: ${DATABASE_NAME}-${STAGE}
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  # Local: A partir do Dockerfile
+  track-cash-backend:
+    profiles: [local]
+    build:
+      context: ../
+      dockerfile: infra/Dockerfile
+    container_name: ${PROJECT_NAME}-${STAGE}
+    depends_on:
+      - track-cash-database
+    environment:
+      DATABASE_URL: ${DATABASE_URL}/${DATABASE_NAME}-${STAGE}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      APP_PORT: ${APP_PORT}
+      SPRING_PROFILES_ACTIVE: ${STAGE}
+    ports:
+      - "8080:8080"
+
+  # Dev/Hml/Prod
+  track-cash-backend-remote:
+    profiles: [dev, hml, prod]
+    image: ${DOCKER_REGISTRY}/${PROJECT_NAME}:${STAGE}
+    container_name: ${PROJECT_NAME}-${STAGE}
+    depends_on:
+      - track-cash-database
+    environment:
+      DATABASE_URL: ${DATABASE_URL}/${DATABASE_NAME}-${STAGE}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      APP_PORT: ${APP_PORT}
+      SPRING_PROFILES_ACTIVE: ${STAGE}
+    ports:
+      - "8080:8080"
