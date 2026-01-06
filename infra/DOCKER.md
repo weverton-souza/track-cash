@@ -3,7 +3,7 @@
 ## Como Rodar
 ```bash
 # Subir os containers
-docker-compose --env-file env/local.env up -d
+docker-compose --env-file env/local.env --profile local up -d
 
 # Ver logs
 docker-compose logs -f

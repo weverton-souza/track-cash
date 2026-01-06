@@ -3,9 +3,9 @@ spring:
     init:
       mode: always
   datasource:
-    url: jdbc:postgresql://${POSTGRES_URL:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DATABASE:track-cash-database}
-    username: ${POSTGRES_USERNAME:trackcash}
-    password: ${POSTGRES_PASSWORD:hoezdj9v8zF6uaB6I88E}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     properties:

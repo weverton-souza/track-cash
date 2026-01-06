@@ -1,7 +1,7 @@
 services:
   track-cash-database:
     image: postgres:16-alpine
-    container_name: ${DATABASE_NAME}-${STAGE}
+    container_name: ${DATABASE_NAME}
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USER}
@@ -10,6 +10,11 @@ services:
       - "5432:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   # Local: A partir do Dockerfile
   track-cash-backend:
@@ -17,11 +22,12 @@ services:
     build:
       context: ../
       dockerfile: infra/Dockerfile
-    container_name: ${PROJECT_NAME}-${STAGE}
+    container_name: ${PROJECT_NAME}
     depends_on:
-      - track-cash-database
+      track-cash-database:
+        condition: service_healthy
     environment:
-      DATABASE_URL: ${DATABASE_URL}/${DATABASE_NAME}-${STAGE}
+      DATABASE_URL: ${DATABASE_URL}/${DATABASE_NAME}
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       APP_PORT: ${APP_PORT}
@@ -33,11 +39,12 @@ services:
   track-cash-backend-remote:
     profiles: [dev, hml, prod]
     image: ${DOCKER_REGISTRY}/${PROJECT_NAME}:${STAGE}
-    container_name: ${PROJECT_NAME}-${STAGE}
+    container_name: ${PROJECT_NAME}
     depends_on:
-      - track-cash-database
+      track-cash-database:
+        condition: service_healthy
     environment:
-      DATABASE_URL: ${DATABASE_URL}/${DATABASE_NAME}-${STAGE}
+      DATABASE_URL: ${DATABASE_URL}/${DATABASE_NAME}
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       APP_PORT: ${APP_PORT}
